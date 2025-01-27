@@ -64,15 +64,20 @@ function createWindow() {
   mainWindow.maximize();
   mainWindow.show();
 
+  // Load login page by default
   mainWindow.loadURL(
-    `file://${path.join(__dirname, 'index.html')}`
-  )
+    `file://${path.join(__dirname, 'login.html')}`
+  );
 
   mainWindow.on('closed', () => {
     mainWindow = null
-  })
+  });
 }
 
+// Handle page reloads
+ipcMain.on('app-reload', () => {
+  mainWindow.reload();
+});
 
 app.on("ready", ()=>{
   process.env.APPDATA = path.join(app.getPath('home'),app.name);
@@ -99,11 +104,6 @@ ipcMain.on('app-quit', (evt, arg) => {
 })
 
 
-ipcMain.on('app-reload', (event, arg) => {
-  mainWindow.reload();
-});
-
-
 
 contextMenu({
   prepend: (params, browserWindow) => [
@@ -127,7 +127,3 @@ contextMenu({
   ],
 
 });
-
- 
-
- 

@@ -59,26 +59,47 @@ app.get( "/logout/:userId", function ( req, res ) {
 
 
 app.post( "/login", function ( req, res ) {  
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).json({ error: "Username and password are required" });
+    }
+
     usersDB.findOne( {
         username: req.body.username,
         password: btoa(req.body.password)
-
-}, function ( err, docs ) {
-        if(docs) {
-            usersDB.update( {
-                _id: docs._id
-            }, {
-                $set: {
-                    status: 'Logged In_'+ new Date()
-                }
-            }, {},
-            
-        );
+    }, function ( err, docs ) {
+        if (err) {
+            return res.status(500).json({ error: "Internal server error" });
         }
-        res.send( docs );
-    } );
-    
-} );
+        
+        if (!docs) {
+            return res.status(401).json({ error: "Invalid username or password" });
+        }
+
+        // Update login status
+        usersDB.update( {
+            _id: docs._id
+        }, {
+            $set: {
+                status: 'Logged In_'+ new Date()
+            }
+        }, {});
+
+        // Return user data without sensitive information
+        const user = {
+            _id: docs._id,
+            username: docs.username,
+            fullname: docs.fullname,
+            perm_products: docs.perm_products,
+            perm_categories: docs.perm_categories,
+            perm_transactions: docs.perm_transactions,
+            perm_users: docs.perm_users,
+            perm_settings: docs.perm_settings,
+            status: docs.status
+        };
+        
+        res.json({ success: true, user: user });
+    });
+});
 
 
 

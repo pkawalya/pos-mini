@@ -1874,11 +1874,10 @@ if (auth == undefined) {
         confirmButtonText: "Logout",
       }).then((result) => {
         if (result.value) {
-          $.get(api + "users/logout/" + user._id, function (data) {
-            storage.delete("auth");
-            storage.delete("user");
-            ipcRenderer.send("app-reload", "");
-          });
+          storage.delete("auth");
+          storage.delete("user");
+          ipcRenderer.send("app-reload", "");
+          window.location.href = 'login.html';
         }
       });
     });

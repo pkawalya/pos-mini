@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quick Till - Login</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />    
+    <link href="assets/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/pages.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #6c5ce7, #a363d9);
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            -webkit-app-region: drag;
+        }
+
+        input, button {
+            -webkit-app-region: no-drag;
+        }
+
+        .window-controls {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 15px;
+            z-index: 1000;
+            -webkit-app-region: no-drag;
+            display: flex;
+            gap: 15px;
+        }
+
+        .window-controls button {
+            background: none;
+            border: none;
+            color: #fff;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .window-controls button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #close-btn:hover {
+            background: #ff5b5b;
+        }
+
+        .login-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-app-region: no-drag;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo h2 {
+            color: #2d3436;
+            font-size: 32px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .login-logo p {
+            color: #636e72;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            color: #2d3436;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 10px;
+            border: 2px solid #e1e8ed;
+            padding: 10px 15px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .btn-primary {
+            background: #6c5ce7;
+            border: none;
+            height: 48px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #5b4cc4;
+            transform: translateY(-1px);
+            box-shadow: 0 7px 14px rgba(108, 92, 231, 0.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .error-message {
+            background: #fff3f3;
+            color: #ff5b5b;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+            margin-top: 15px;
+            border: 1px solid #ffe5e5;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #636e72;
+            font-size: 14px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-primary.loading .loading-spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="window-controls">
+        <button id="minimize-btn"><i class="fa fa-window-minimize"></i></button>
+        <button id="maximize-btn"><i class="fa fa-window-maximize"></i></button>
+        <button id="close-btn"><i class="fa fa-times"></i></button>
+    </div>
+
+    <div class="container login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <h2>Semugera Enterprises</h2>
+                <p>Point of Sale System</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span class="loading-spinner"></span>
+                    <span class="btn-text">Login</span>
+                </button>
+            </form>
+            <div class="form-footer">
+                &copy; 2025 Semugera Enterprises. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script src="assets/plugins/bootstrap/bootstrap.min.js"></script>
+    <script>
+        const Store = require('electron-store');
+        const storage = new Store();
+        const { ipcRenderer, remote } = require('electron');
+        const win = remote.getCurrentWindow();
+
+        // Window control buttons
+        document.getElementById('minimize-btn').addEventListener('click', () => {
+            win.minimize();
+        });
+
+        document.getElementById('maximize-btn').addEventListener('click', () => {
+            if (win.isMaximized()) {
+                win.unmaximize();
+            } else {
+                win.maximize();
+            }
+        });
+
+        document.getElementById('close-btn').addEventListener('click', () => {
+            win.close();
+        });
+
+        $(document).ready(function() {
+            // Check if already authenticated
+            const auth = storage.get('auth');
+            if (auth) {
+                window.location.href = 'index.html';
+            }
+
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const username = $('#username').val();
+                const password = $('#password').val();
+                const api = 'http://localhost:8001/api/';
+
+                // Basic validation
+                if (!username || !password) {
+                    $('#errorMessage').text('Please enter both username and password').show();
+                    return;
+                }
+
+                // Clear previous error
+                $('#errorMessage').hide();
+
+                // Show loading state
+                const submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.addClass('loading').prop('disabled', true);
+                submitBtn.find('.btn-text').text('Logging in...');
+
+                // Attempt login
+                $.post(api + 'users/login', {
+                    username: username,
+                    password: password
+                })
+                .done(function(response) {
+                    if (response.success && response.user) {
+                        storage.set('auth', true);
+                        storage.set('user', response.user);
+                        window.location.href = 'index.html';
+                    } else {
+                        $('#errorMessage').text('Invalid login response from server').show();
+                    }
+                })
+                .fail(function(xhr) {
+                    const errorMsg = xhr.responseJSON && xhr.responseJSON.error 
+                        ? xhr.responseJSON.error 
+                        : 'Login failed. Please check your credentials.';
+                    $('#errorMessage').text(errorMsg).show();
+                })
+                .always(function() {
+                    // Reset button state
+                    submitBtn.removeClass('loading').prop('disabled', false);
+                    submitBtn.find('.btn-text').text('Login');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
