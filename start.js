@@ -12,10 +12,10 @@ const appVersion = app.getVersion();
 // Set the feed URL for updates
 autoUpdater.setFeedURL({
   provider: 'github',
-  owner: 'Ayuen-madyt',
-  repo: 'Quicktill',
+  owner: 'pkawalya',
+  repo: 'pos-mini',
   token: process.env.GITHUB_TOKEN,
-  url: `https://github.com/Ayuen-madyt/Quicktill/releases/tag/v${appVersion}`,
+  url: `https://github.com/pkawalya/pos-mini/releases/tag/v${appVersion}`,
 });
 
 autoUpdater.checkForUpdatesAndNotify();
