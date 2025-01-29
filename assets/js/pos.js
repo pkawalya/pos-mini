@@ -2221,29 +2221,25 @@ function loadTransactions() {
 
         const result = {};
 
+        // Group items by product ID instead of name to avoid duplicates
         for (const { product_name, price, quantity, id } of sold_items) {
-          if (!result[product_name]) result[product_name] = [];
-          result[product_name].push({ id, price, quantity });
+          if (!result[id]) {
+            result[id] = {
+              name: product_name,
+              price: price,
+              quantity: 0
+            };
+          }
+          result[id].quantity += quantity;
         }
 
-        for (item in result) {
-          let price = 0;
-          let quantity = 0;
-          let id = 0;
-
-          result[item].forEach((i) => {
-            id = i.id;
-            price = i.price;
-            quantity += i.quantity;
-          });
-
-          sold.push({
-            id: id,
-            product: item,
-            qty: quantity,
-            price: price,
-          });
-        }
+        // Convert the grouped results back to the sold array
+        sold = Object.entries(result).map(([id, data]) => ({
+          id: parseInt(id),
+          product: data.name,
+          qty: data.quantity,
+          price: data.price
+        }));
 
         loadSoldProducts();
 
